@@ -1,0 +1,54 @@
+// app global css in SCSS form
+
+.body--dark {
+  header{
+    background-color: #1D1D1D !important;
+  }
+  div[name="profile-caption"]{
+    color: #bdbdbd !important;
+  }
+  main{
+    background-color: #424242 !important;
+    div[name="section-title"]{
+        color: #bdbdbd !important;
+    }
+  }
+  footer{
+    div[name="dateTab"]{
+        background-color: #1D1D1D !important;
+    }
+  }
+  div[name="dishInfo"]{
+    background-color: #424242 !important;
+  }
+  div[name="dishInfoHeader"]{
+    background-color: #1D1D1D !important;
+    color: #bdbdbd !important;
+  }
+  div[name="dishInfoDiv"]{
+    color: #bdbdbd !important;
+  }
+}
+
+// FONT
+
+@font-face {
+    font-family: customfont;
+    src: url(../statics/fonts/BalooPaaji2-Regular.ttf);
+}
+
+@font-face {
+    font-family: customfont2;
+    src: url(../statics/fonts/BalooPaaji2-Medium.ttf);
+}
+
+.app-font {
+    font-family: 'customfont';
+}
+
+.app-font-medium {
+    font-family: 'customfont2';
+}
+
+//BUTTONS
+
