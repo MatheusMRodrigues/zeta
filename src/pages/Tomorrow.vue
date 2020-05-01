@@ -9,7 +9,7 @@
         <div name="section-title" class="q-mt-sm app-font-medium text-grey-7">CAFÉ DA MANHÃ</div>
       </div>
 
-      <div v-for="(breakfast, key) in breakfastTomorrow" :key="key">
+      <div v-for="breakfast in breakfastTomorrow" :key="breakfast.breakfastID">
         <div v-for="(item, itemKey) in breakfast.items" :key="itemKey">
           <menu-item :item="item" :itemKey="itemKey" class="q-mb-md" />
         </div>
@@ -27,7 +27,7 @@
         <div name="section-title" class="q-mt-sm app-font-medium text-grey-7">ALMOÇO</div>
       </div>
 
-      <div v-for="(lunch, key) in lunchTomorrow" :key="key">
+      <div v-for="lunch in lunchTomorrow" :key="lunch.breakfastID">
         <div v-for="(item, itemKey) in lunch.items" :key="itemKey">
           <menu-item :item="item" :itemKey="itemKey" class="q-mb-md" />
         </div>
@@ -45,7 +45,7 @@
         <div name="section-title" class="q-mt-sm app-font-medium text-grey-7">JANTAR</div>
       </div>
 
-      <div v-for="(dinner, key) in dinnerTomorrow" :key="key">
+      <div v-for="dinner in dinnerTomorrow" :key="dinner.breakfastID">
         <div v-for="(item, itemKey) in dinner.items" :key="itemKey">
           <menu-item :item="item" :itemKey="itemKey" class="q-mb-md" />
         </div>

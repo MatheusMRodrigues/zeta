@@ -16,7 +16,7 @@ const state ={
         breakfasts: {
             'BF1': {
                 breakfastID: 'BF1',
-                menuDate: '28/04/2020',
+                menuDate: '30/04/2020',
                 items: {
                     'IT1' : {
                         totalRating: 2,
@@ -64,7 +64,7 @@ const state ={
             },
             'BF2': {
                 breakfastID: 'BF2',
-                menuDate: '30/04/2020',
+                menuDate: '01/05/2020',
                 items: {
                     'IT4' : {
                         totalRating: 2,
@@ -85,6 +85,7 @@ const state ={
         },
         lunchs: {
             'LC1': {
+                lunchID: 'LC1',
                 menuDate: '30/04/2020',
                 items: {
                     'IT5' : {
@@ -134,6 +135,7 @@ const state ={
         },
         dinners: {
             'DN1': {
+                dinnerID: 'DN1',
                 menuDate: '30/04/2020',
                 items: {
                     'IT8' : {
