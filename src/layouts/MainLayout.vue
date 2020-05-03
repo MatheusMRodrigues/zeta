@@ -27,9 +27,9 @@
         :breakpoint="400"
         class="app-font"
       >
-        <q-scroll-area style="height: calc(100% - 115px); margin-top: 115px;">
+        <q-scroll-area style="height: calc(100% - 120px); margin-top: 120px;">
           
-          <q-separator inset />
+          <q-separator color="red-5" inset />
 
           <q-list padding style="font-size: 1.1em">
             
@@ -91,7 +91,7 @@
 
         </q-scroll-area>
 
-        <div class="absolute-top" style="height: 115px; margin-left: -5px;">
+        <div class="absolute-top" style="height: 120px; margin-left: -5px;">
           <div class="absolute-bottom bg-transparent row">
             <q-avatar size="80px" class="q-mb-md q-pa-none col">
               <img src="https://cdn.quasar.dev/img/boy-avatar.png">

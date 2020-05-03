@@ -78,7 +78,7 @@
     },
 
     components: {
-      "menu-item": require("components/cards/menu/MenuItem.vue").default
+      "menu-item": require("components/menu/MenuItem.vue").default
     },
 
     computed: {

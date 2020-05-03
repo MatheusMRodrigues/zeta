@@ -24,6 +24,6 @@
     <allow-navigation href="about:*" />
     <preference name="Orientation" value="portrait" />
     <preference name="StatusBarOverlaysWebView" value="true" />
-    <preference name="StatusBarBackgroundColor" value="#ffffff" />
-    <preference name="StatusBarStyle" value="default" />
+    <preference name="StatusBarBackgroundColor" value="#ef5350" />
+    <preference name="StatusBarStyle" value="dark" />
 </widget>
