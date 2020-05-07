@@ -10,13 +10,19 @@
       </div>
 
       <div v-for="breakfast in breakfastTomorrow" :key="breakfast.breakfastID">
-        <div v-for="(item, itemKey) in breakfast.items" :key="itemKey">
-          <menu-item :item="item" :itemKey="itemKey" class="q-mb-md" />
-        </div>
+        <transition-group
+          appear
+          enter-active-class="animated bounceIn"
+          leave-active-class="animated hinge"
+        >
+          <div class="q-mb-md" v-for="(item, itemKey) in breakfast.items" :key="item.itemID">
+            <menu-item :item="item" :itemKey="itemKey" />
+          </div>
+        </transition-group>
       </div>
 
-      <div v-if="!breakfastTomorrow.length" class="no-items text-center q-mt-xl">
-        <q-img src="statics/icons/sadface.svg" style="width: 30%;" />
+      <div v-if="!breakfastTomorrow.length" class="text-center q-mt-xl animated zoomIn slow delay-2s">
+        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
@@ -28,13 +34,19 @@
       </div>
 
       <div v-for="lunch in lunchTomorrow" :key="lunch.breakfastID">
-        <div v-for="(item, itemKey) in lunch.items" :key="itemKey">
-          <menu-item :item="item" :itemKey="itemKey" class="q-mb-md" />
-        </div>
+        <transition-group
+          appear
+          enter-active-class="animated bounceIn"
+          leave-active-class="animated hinge"
+        >
+          <div class="q-mb-md" v-for="(item, itemKey) in lunch.items" :key="item.itemID">
+            <menu-item :item="item" :itemKey="itemKey" />
+          </div>
+        </transition-group>
       </div>
 
-      <div v-if="!lunchTomorrow.length" class="no-items text-center q-mt-xl">
-        <q-img src="statics/icons/sadface.svg" style="width: 30%;" />
+      <div v-if="!lunchTomorrow.length" class="text-center q-mt-xl animated zoomIn slow delay-2s">
+        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
@@ -46,13 +58,13 @@
       </div>
 
       <div v-for="dinner in dinnerTomorrow" :key="dinner.breakfastID">
-        <div v-for="(item, itemKey) in dinner.items" :key="itemKey">
-          <menu-item :item="item" :itemKey="itemKey" class="q-mb-md" />
+        <div class="q-mb-md" v-for="(item, itemKey) in dinner.items" :key="item.itemID">
+          <menu-item :item="item" :itemKey="itemKey" />
         </div>
       </div>
 
-      <div v-if="!dinnerTomorrow.length" class="no-items text-center q-mt-xl q-mb-lg">
-        <q-img src="statics/icons/sadface.svg" style="width: 30%;" />
+      <div v-if="!dinnerTomorrow.length" class="text-center q-mt-xl q-mb-lg animated zoomIn slow delay-2s">
+        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>

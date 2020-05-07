@@ -1,14 +1,19 @@
+import Vue from "vue"
 import moment from "moment"
+import {uid} from "quasar"
 
 const state ={
     user: {
         userId: '0001',
         favorites: {
-            favorite1:{
-                dihseID: 'ID1'
+            'FV1':{
+                dishID: 'ID3'
             },
-            favorite2:{
-                dihseID: 'ID2'
+            'FV2':{
+                dishID: 'ID4'
+            },
+            'FV3':{
+                dishID: 'ID6'
             }
         }
     },
@@ -16,24 +21,27 @@ const state ={
         breakfasts: {
             'BF1': {
                 breakfastID: 'BF1',
-                menuDate: '02/05/2020',
+                menuDate: '06/05/2020',
                 items: {
                     'IT1' : {
+                        itemID: 'IT1',
                         totalRating: 2,
+                        ratingAvg: 2,
                         userRating: {
                             '0001': {
                                 rating: 4,
-                                userID: 'userId1',
+                                userID: '0001',
                             },
                             '0002': {
                                 rating: 1,
-                                userID: 'userId2',
+                                userID: '0002',
                             },
                         },
                         dishID: 'ID1',
                     },
                     'IT2' : {
-                        totalRating: 2,
+                        itemID: 'IT2',
+                        totalRating: 3,
                         userRating: {
                             '0001': {
                                 rating: 4,
@@ -47,7 +55,8 @@ const state ={
                         dishID: 'ID2',
                     },
                     'IT3' : {
-                        totalRating: 2,
+                        itemID: 'IT3',
+                        totalRating: 5,
                         userRating: {
                             '0001': {
                                 rating: 4,
@@ -64,10 +73,11 @@ const state ={
             },
             'BF2': {
                 breakfastID: 'BF2',
-                menuDate: '03/05/2020',
+                menuDate: '07/05/2020',
                 items: {
                     'IT4' : {
-                        totalRating: 2,
+                        itemID: 'IT4',
+                        totalRating: 1,
                         userRating: {
                             '0001': {
                                 rating: 4,
@@ -86,9 +96,10 @@ const state ={
         lunchs: {
             'LC1': {
                 lunchID: 'LC1',
-                menuDate: '02/05/2020',
+                menuDate: '06/05/2020',
                 items: {
                     'IT5' : {
+                        itemID: 'IT5',
                         totalRating: 2,
                         userRating: {
                             'userId1': {
@@ -103,6 +114,7 @@ const state ={
                         dishID: 'ID4',
                     },
                     'IT6' : {
+                        itemID: 'IT6',
                         totalRating: 2,
                         userRating: {
                             'userId1': {
@@ -117,6 +129,7 @@ const state ={
                         dishID: 'ID5',
                     },
                     'IT7' : {
+                        itemID: 'IT7',
                         totalRating: 2,
                         userRating: {
                             'userId1': {
@@ -136,9 +149,10 @@ const state ={
         dinners: {
             'DN1': {
                 dinnerID: 'DN1',
-                menuDate: '02/05/2020',
+                menuDate: '06/05/2020',
                 items: {
                     'IT8' : {
+                        itemID: 'IT8',
                         totalRating: 2,
                         userRating: {
                             'userId1': {
@@ -269,95 +283,112 @@ const state ={
             favoriteTotal: 0,
             favoriteIcon: 'lar la-heart'
         },
-        'ID8' : {
-            dishID: 'ID9',
-            itemName: 'Macarrão Amanhã',
-            itemType: 'Principal',
-            itemCategory: 'Breakfast',
-            itemImage: 'statics/macarrao.jpg',
-            itemDescription: 'Fruta de acompanhamento',
-            itemDate: '22/04/2020',
-            itemHave: [
-                'Água', 'Leite', 'Farinha de trigo', 'Sal' 
-            ],
-            ratingAvg: 0,
-            totalRating: '12',
-            favoriteTotal: 0,
-            favoriteIcon: 'lar la-heart'
-        },
-        'ID9' : {
-            dishID: 'ID9',
-            itemName: 'Macarrão Amanhã',
-            itemType: 'Principal',
-            itemCategory: 'Lunch',
-            itemImage: 'statics/macarrao.jpg',
-            itemDescription: 'Fruta de acompanhamento',
-            itemDate: '22/04/2020',
-            itemHave: [
-                'Água', 'Leite', 'Farinha de trigo', 'Sal' 
-            ],
-            ratingAvg: 0,
-            totalRating: '12',
-            favoriteTotal: 0,
-            favoriteIcon: 'lar la-heart'
-        },
-        'ID10' : {
-            dishID: 'ID9',
-            itemName: 'Macarrão Amanhã',
-            itemType: 'Principal',
-            itemCategory: 'Dinner',
-            itemImage: 'statics/macarrao.jpg',
-            itemDescription: 'Fruta de acompanhamento',
-            itemDate: '22/04/2020',
-            itemHave: [
-                'Água', 'Leite', 'Farinha de trigo', 'Sal' 
-            ],
-            ratingAvg: 0,
-            totalRating: '12',
-            favoriteTotal: 0,
-            favoriteIcon: 'lar la-heart'
-        }
     }
 
 }
 
+/* 
+
+    https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap
+
+    console.log("menu", state.menu)
+
+    Object.values(state.menu.breakfasts).flatMap(e => Object.values(e.items)).flatMap(e => Object.values(e.userRating))
+
+    Object.values(state.menu).flatMap(e => Object.values(e)).flatMap(e => Object.values(e.items))
+
+    Object.values(temp1).flatMap(e => Object.values(e)).flatMap(e => Object.values(e.items)).flatMap(e => Object.values(e.userRating)).map(e => e.rating)
+    
+    
+    var arrayID3 = Object.values(temp1)
+        .flatMap(e => Object.values(e))
+        .filter(e => e.menuDate == "03/05/2020")
+        .flatMap(e => Object.values(e.items))
+        // .filter(e => e.dishID == "ID3" && e.menuDate == "03/05/2020")
+        .flatMap(e => Object.values(e.userRating))
+        .map(e => e.rating)
+
+    arrayID3.reduce((acc, e) => e + acc, 0) / arrayID3.length // calculou media
+
+*/
+
+console.log("menu", state.menu)
+
 const mutations = {
-    makeFavorite (state, id) {
-        console.log("aqui", id)
-        state.items[id].favorite = !state.items[id].favorite;
-        if (state.items[id].favorite == true) {
-          state.items[id].favoriteIcon = 'las la-heart'
-        }
-        else{
-          state.items[id].favoriteIcon = 'lar la-heart'
-        }
+    addFavorite(state, payload){
+        // console.log(payload)
+        Vue.set(state.user.favorites, payload.id, {dishID: payload.dishID})
     },
-    details (state, id) {
-        console.log('ID:', id)
+    addRating(state, {menuSchedule, menuSchedulId, itemId}, userRatingId, rating, userID){
+        // console.log(payload)
+        Vue.set(state.menu[menuSchedule][menuScheduleId].items[itemId].userRating, userRatingId, 
+            {
+                rating: rating,
+                userID: userID
+            }
+        )
     },
+    removeFavorite(state, id){
+        Vue.delete(state.user.favorites, id)
+        console.log("id", id, state.user.favorites)
+    },
+    
     ratingUpdate (state, payload) {
         console.log(payload)
         state.items[payload.id].rating = payload.rate;
     }
 }
 
+const objToArray = obj => Object.values(obj);
+
+const objToArrayWithKey = (obj) => Object.keys(obj).map(key => [key, obj[key]]);
+
 const actions = {
-    makeFavorite ({ commit }, id) {
-        commit('makeFavorite', id)
+    checkFavorite({ commit, state }, dishID){
+        let tempFavorites = objToArrayWithKey(state.user.favorites)
+
+        let found = tempFavorites.find(e => e[1].dishID == dishID)
+
+        console.log(dishID, found, tempFavorites)
+
+        if(!found)  {
+            let favoriteID = uid()
+            let payload = {
+                id: favoriteID,
+                dishID: dishID
+            }
+            commit('addFavorite', payload)
+        }
+        else{
+            // console.log(found[0])
+            commit('removeFavorite', found[0])
+        }
     },
-    details ({ commit }, id) {
-        commit('details', id)
+
+    checkRating({commit, state}, userID){
+
+
     },
+    
     ratingUpdate ({commit}, payload){
         commit('ratingUpdate', payload)
     }
 }
 
 let today = moment().format('DD/MM/YYYY');
-console.log(today);
+// console.log(today);
 
 let tomorrow = moment().add(1, 'days').format('DD/MM/YYYY');
-console.log(tomorrow);
+// console.log(tomorrow);
+
+const userFavorites = (state) => {
+    // return Object.values(state.user.favorites);
+    return objToArray(state.user.favorites);
+}
+
+const userFavoritesIDs = (state) => {
+    return objToArray(state.user.favorites).map(e => e.dishID);
+}
 
 const breakfast = (state) => {
     return state.menu.breakfasts
@@ -393,21 +424,40 @@ const favorites = (state) => {
 const dishFinder = (state) => (id) => {
     return Object.values(state.dishes || {}).find(d => d.dishID == id)
 }
+const userRating = (state) => (menuSchedule, menuScheduleId, itemId, userRatingId) => {
+    state.menu[menuSchedule][menuScheduleId].items[itemId].userRating[userRatingId] // ===  { rating: 4, userID: 'userId1'}
+}
+
+const userRatingBreakfast = (state) => (breakfastId, itemId, userRatingId) => {
+    userRating(state)("breakfast", breakfastId, itemId, userRatingId)
+}
+const userRatingLunch = (state) => (lunchId, itemId, userRatingId) => {
+    userRating(state)("lunch", lunchId, itemId, userRatingId)
+}
+const userRatingDinner = (state) => (dinnerId, itemId, userRatingId) => {
+    userRating(state)("dinner", dinnerId, itemId, userRatingId)
+}
 
 const getters = {
     dishes: (state) => {
         return state.dishes;
     },
+    userRating : userRating,
     dishFinder : dishFinder,
+    userRatingBreakfast : userRatingBreakfast,
+    userRatingLunch : userRatingLunch,
+    userRatingDinner : userRatingDinner,
     breakfast : breakfast,
     breakfastToday : breakfastToday,
-    breakfastTomorrow :breakfastTomorrow,
+    breakfastTomorrow : breakfastTomorrow,
     lunch : lunch,
     lunchToday : lunchToday,
     lunchTomorrow :lunchTomorrow,
     dinner : dinner,
     dinnerToday : dinnerToday,
-    dinnerTomorrow :dinnerTomorrow,
+    dinnerTomorrow : dinnerTomorrow,
+    userFavorites : userFavorites,
+    userFavoritesIDs : userFavoritesIDs
 }
 
 

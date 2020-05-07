@@ -2,9 +2,9 @@
 
   <q-card name="dishInfo" class="bg-grey-2">
 
-    <q-bar name="dishInfoHeader" class="bg-white q-py-lg">
+    <q-bar name="dishInfoHeader" class="bg-white q-py-lg" style="margin-left: -10px;">
       <q-btn class="text-red-5" size="lg" dense flat icon="las la-angle-left" v-close-popup/>
-      <div name="dishInfoDiv" class="text-red-5 app-font-medium" style="font-size: 1.2em;">Informações</div>
+      <div name="dishInfoDiv" class="text-red-5 app-font-medium" style="font-size: 1.2em;">INFORMAÇÕES</div>
     </q-bar>
 
     <q-img :src="dish.itemImage" :ratio="16/9" basic/>

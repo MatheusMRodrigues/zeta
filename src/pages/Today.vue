@@ -10,13 +10,18 @@
       </div>
 
       <div v-for="breakfast in breakfastToday" :key="breakfast.breakfastID">
-        <div v-for="(item, itemKey) in breakfast.items" :key="itemKey">
-          <menu-item :item="item" :itemKey="itemKey" class="q-mb-md" />
-        </div>
+        <transition-group
+          appear
+          enter-active-class="animated bounceIn"
+          leave-active-class="animated hinge">
+          <div class="q-mb-md" v-for="(item, itemKey) in breakfast.items" :key="item.itemID">
+            <menu-item :item="item" :itemKey="itemKey"/>
+          </div>
+        </transition-group>
       </div>
 
-      <div v-if="!breakfastToday.length" class="no-items text-center q-mt-xl">
-        <q-img src="statics/icons/sadface.svg" style="width: 30%;" />
+      <div v-if="!breakfastToday.length" class="text-center q-mt-xl animated zoomIn slow delay-2s">
+        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
@@ -28,13 +33,18 @@
       </div>
 
       <div v-for="lunch in lunchToday" :key="lunch.lunchID">
-        <div v-for="(item, itemKey) in lunch.items" :key="itemKey">
-          <menu-item :item="item" :itemKey="itemKey" class="q-mb-md" />
-        </div>
+        <transition-group
+          appear
+          enter-active-class="animated bounceIn"
+          leave-active-class="animated hinge">
+          <div class="q-mb-md" v-for="(item, itemKey) in lunch.items" :key="item.itemID">
+            <menu-item :item="item" :itemKey="itemKey" />
+          </div>
+        </transition-group>
       </div>
 
-      <div v-if="!lunchToday.length" class="no-items text-center q-mt-xl">
-        <q-img src="statics/icons/sadface.svg" style="width: 30%;" />
+      <div v-if="!lunchToday.length" class="text-center q-mt-xl animated zoomIn slow delay-2s">
+        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
@@ -45,14 +55,19 @@
         <div name="section-title" class="q-mt-sm app-font-medium text-grey-7">JANTAR</div>
       </div>
 
-      <div v-for="(dinner, key) in dinnerToday" :key="key">
-        <div v-for="(item, itemKey) in dinner.items" :key="itemKey">
-          <menu-item :item="item" :itemKey="itemKey" class="q-mb-md" />
-        </div>
+      <div v-for="dinner in dinnerToday" :key="dinner.dinnerID">
+        <transition-group
+          appear
+          enter-active-class="animated bounceIn"
+          leave-active-class="animated hinge">
+          <div class="q-mb-md" v-for="(item, itemKey) in dinner.items" :key="item.itemID">
+            <menu-item :item="item" :itemKey="itemKey" />
+          </div>
+        </transition-group>
       </div>
 
-      <div v-if="!dinnerToday.length" class="no-items text-center q-mt-xl q-mb-lg">
-        <q-img src="statics/icons/sadface.svg" style="width: 30%;" />
+      <div v-if="!dinnerToday.length" class="text-center q-mt-xl q-mb-lg animated zoomIn slow delay-2s">
+        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
@@ -63,9 +78,7 @@
 </template>
 
 <script>
-  import {
-    mapGetters
-  } from "vuex";
+  import { mapGetters } from "vuex";
 
   export default {
     name: "PageToday",
@@ -83,7 +96,8 @@
 
     computed: {
       ...mapGetters("dish", ["breakfastToday", "lunchToday", "dinnerToday"])
-    }
+    },
+    
   };
 
 </script>

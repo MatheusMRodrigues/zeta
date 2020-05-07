@@ -33,7 +33,7 @@
 
           <q-list padding style="font-size: 1.1em">
             
-            <q-item to="/menu" exact class="q-py-lg" clickable v-ripple>
+            <q-item to="/menu/today" exact class="q-py-lg" clickable v-ripple>
               <q-item-section avatar>
                 <q-icon name="las la-book-reader"/>
               </q-item-section>
@@ -42,7 +42,18 @@
               </q-item-section>
             </q-item>
 
-            <q-item to="/" exact class="q-py-lg" clickable v-ripple>
+            <q-item to="/feed" exact class="q-py-lg" clickable v-ripple>
+              <q-item-section avatar>
+                <q-icon name="las la-bullhorn">
+                  <q-badge color="red-5" floating label="1"></q-badge>
+                </q-icon>
+              </q-item-section>
+              <q-item-section>
+                Avisos
+              </q-item-section>
+            </q-item>
+
+            <q-item to="/favorites" exact class="q-py-lg" clickable v-ripple>
               <q-item-section avatar>
                 <q-icon name="lar la-heart"/>
               </q-item-section>
@@ -78,7 +89,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item class="fixed-bottom q-py-lg text-red-8 text-bold" clickable v-ripple>
+            <q-item to="/" class="fixed-bottom q-py-lg text-red-8 text-bold" clickable v-ripple>
               <q-item-section avatar>
                 <q-icon name="las la-sign-out-alt" />
               </q-item-section>

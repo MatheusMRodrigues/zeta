@@ -1,5 +1,10 @@
 <template>
-  <q-page padding>
+  <q-page padding class="bg-grey-2">
+    <div style="margin-top: -10px">
+    <div class="section-title flex flex-left q-py-sm q-my-md row">
+      <q-icon name="las la-tools" size="lg" color="red-5" class="ribbon-icon on-left" />
+      <div name="section-title" class="q-mt-sm app-font-medium text-grey-7">CONFIGURAÇÕES</div>
+    </div>
     <div class=" row">
       <div class="flex flex-center col-auto">
         Modo escuro:
@@ -13,6 +18,7 @@
         />
       </div>
     </div>
+    </div>
   </q-page>
 </template>
 
@@ -22,7 +28,7 @@ export default {
 
   data () {
     return {
-      darkMode: true
+      darkMode: false
     }
   },
 

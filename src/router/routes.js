@@ -8,7 +8,7 @@ const routes = [
   },
   {path: '/', component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: 'favorites', component: () => import('pages/Index.vue') },
+      { path: 'favorites', component: () => import('pages/Favorites.vue') },
       { path: 'menu', component: () => import('pages/Menu.vue'),
         children: [
           {path: 'today', component: () => import('pages/Today.vue')},
@@ -16,6 +16,7 @@ const routes = [
         ] 
       },
       { path: 'settings', component: () => import('pages/Settings.vue') },
+      { path: 'feed', component: () => import('pages/Feed.vue') },
     ]
   }
 ]
