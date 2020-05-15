@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { vuexfireMutations } from 'vuexfire'
 import dish from './dish'
+import auth from './auth'
 
 // import example from './module-example'
 
@@ -17,8 +19,13 @@ Vue.use(Vuex)
 
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
+    mutations: {
+      // other mutations
+      ...vuexfireMutations,
+    },
     modules: {
-      dish
+      dish,
+      auth
     },
 
     // enable strict mode (adds overhead!)

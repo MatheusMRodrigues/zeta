@@ -1,8 +1,10 @@
 <template>
 
-  <q-page class="bg-grey-2">
+  <q-page class="bg-grey-2" :key="doRefresh">
 
     <div style="margin-top: -10px">
+
+      <q-pull-to-refresh :bg-color="refreshColor" @refresh="refresh">
 
       <div class="section-title flex flex-left q-py-sm q-my-md row">
         <q-icon name="img:statics/icons/breakfast.svg" size="lg" class="ribbon-icon on-left" />
@@ -21,7 +23,7 @@
         </transition-group>
       </div>
 
-      <div v-if="!breakfastTomorrow.length" class="text-center q-mt-xl animated zoomIn slow delay-2s">
+      <div v-if="!breakfastTomorrow.length" class="text-center q-mt-xl animated zoomIn">
         <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
@@ -45,7 +47,7 @@
         </transition-group>
       </div>
 
-      <div v-if="!lunchTomorrow.length" class="text-center q-mt-xl animated zoomIn slow delay-2s">
+      <div v-if="!lunchTomorrow.length" class="text-center q-mt-xl animated zoomIn">
         <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
@@ -63,12 +65,14 @@
         </div>
       </div>
 
-      <div v-if="!dinnerTomorrow.length" class="text-center q-mt-xl q-mb-lg animated zoomIn slow delay-2s">
+      <div v-if="!dinnerTomorrow.length" class="text-center q-mt-xl q-mb-lg animated zoomIn">
         <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
       </div>
+
+      </q-pull-to-refresh>
 
     </div>
   </q-page>
@@ -84,6 +88,8 @@
 
     data() {
       return {
+        refreshColor: null,
+        doRefresh: 1,
         tabs: "today",
         rating: 0
       };
@@ -95,6 +101,25 @@
 
     computed: {
       ...mapGetters("dish", ["breakfastTomorrow", "lunchTomorrow", "dinnerTomorrow"])
+    },
+
+    mounted() {
+      if(this.$q.dark.isActive){
+        this.refreshColor = 'dark'
+      }
+      else{
+        this.refreshColor = 'white'
+      }
+    },
+
+    methods: {
+      
+      async refresh (done){
+        setTimeout(() => {
+          this.doRefresh += 1
+          done()
+        }, 1000)
+      }
     }
   };
 

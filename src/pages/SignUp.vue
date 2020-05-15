@@ -85,12 +85,20 @@
               <div class="app-font-medium">
                 <q-input
                   standout="bg-grey-4"
-                  type="password"
                   placeholder="Senha"
                   v-model="signUpForm.password"
                   input-style="color: #ef5350; width: 70vw"
                   ref="password"
+                  :type="isPwd ? 'password' : 'text'"
                   :rules="[ val => val.length >= 6 || 'São necessários no minimo 6 digitos']">
+                  <template v-slot:append>
+                    <q-icon
+                      color="red-5"
+                      :name="isPwd ? 'visibility' : 'visibility_off'"
+                      class="cursor-pointer q-mr-sm"
+                      @click="isPwd = !isPwd"
+                    />
+                  </template>
                   <template v-slot:prepend>
                     <q-icon name="las la-key" color="red-5" />
                   </template>
@@ -107,12 +115,20 @@
               <div class="app-font-medium">
                 <q-input
                   standout="bg-grey-4"
-                  type="password"
                   placeholder="Confirme a senha"
                   v-model="signUpForm.passwordCheck"
                   input-style="color: #ef5350; width: 70vw"
                   ref="passwordCheck"                
+                  :type="isPwd ? 'password' : 'text'"
                   :rules="[ val => val.length >= 6 || 'Precisa de 6']">
+                  <template v-slot:append>
+                    <q-icon
+                      color="red-5"
+                      :name="isPwd ? 'visibility' : 'visibility_off'"
+                      class="cursor-pointer q-mr-sm"
+                      @click="isPwd = !isPwd"
+                    />
+                  </template>
                   <template v-slot:prepend>
                     <q-icon name="las la-key" color="red-5" />
                   </template>
@@ -137,7 +153,7 @@
 
             <template v-slot:navigation>
               <q-stepper-navigation>
-                <q-btn v-if="step < 6" @click="$refs.stepper.next(); canGo = false" :disable="!canGo" color="primary" :label="step === 6 ? 'Finish' : 'Proximo'" class="q-ml-sm" />
+                <q-btn v-if="step < 6" @click="$refs.stepper.next(); canGo = false" :disable="!canGo" color="primary" label="Próximo" class="q-ml-sm" />
               </q-stepper-navigation>
             </template>
           </q-stepper>
@@ -175,6 +191,9 @@
 </style>
 
 <script>
+
+import { mapActions } from 'vuex'
+
 export default {
 
   name: 'PageRegister',
@@ -186,6 +205,8 @@ export default {
       step: 1,
 
       terms: false,
+
+      isPwd: true,
 
       canGo: false,
 
@@ -209,48 +230,107 @@ export default {
       }
     },
 
-    'signUpForm.user': function () {
-      this.$refs.user.validate()
-      if(!this.signUpForm.user.length || this.$refs.user.hasError){
-        this.canGo = false
-      }
-      else{
-        this.canGo = true
-      }
+    'signUpForm.user': {
+      handler: function(val){
+        this.$refs.user.validate()
+        console.log(val)
+        setTimeout(() => {
+          if(!this.$refs.user.hasError){
+          this.canGo = true
+          }
+          else{
+            this.canGo = false
+          }
+        }, 100)
+      },
+      immediate: true
     },
-    'signUpForm.mail': function () {
-      this.$refs.mail.validate()
-      if(!this.signUpForm.mail.length || this.$refs.mail.hasError){
-        this.canGo = false
-      }
-      else{
-        this.canGo = true
-      }
+
+    // 'signUpForm.user': function (val) {
+    //   this.$refs.user.validate()
+    //     if(!this.$refs.user.hasError){
+    //       this.canGo = true
+    //     }
+    //     else{
+    //       this.canGo = false
+    //     }
+    // },
+    'signUpForm.mail': {
+      handler: function(val){
+        this.$refs.mail.validate()
+        console.log(val)
+        setTimeout(() => {
+          if(!this.$refs.mail.hasError){
+          this.canGo = true
+          }
+          else{
+            this.canGo = false
+          }
+        }, 100)
+      },
+      immediate: true
     },
-    'signUpForm.password': function () {
-      this.$refs.password.validate()
-      if(!this.signUpForm.password.length || this.$refs.password.hasError){
-        this.canGo = false
-      }
-      else{
-        this.canGo = true
-      }
+    'signUpForm.password': {
+      handler: function(val){
+        this.$refs.password.validate()
+        console.log(val)
+        setTimeout(() => {
+          if(!this.$refs.password.hasError){
+          this.canGo = true
+          }
+          else{
+            this.canGo = false
+          }
+        }, 100)
+      },
+      immediate: true
     },
-    'signUpForm.passwordCheck': function () {
-      this.$refs.passwordCheck.validate()
-      if(!this.signUpForm.passwordCheck.length || this.$refs.passwordCheck.hasError){
-        this.canGo = false
-      }
-      else{
-        this.canGo = true
-      }
+    'signUpForm.passwordCheck': {
+      handler: function(val){
+        this.$refs.passwordCheck.validate()
+        console.log(val)
+        setTimeout(() => {
+          if(!this.$refs.passwordCheck.hasError){
+          this.canGo = true
+          }
+          else{
+            this.canGo = false
+          }
+        }, 100)
+      },
+      immediate: true
     },
   },
 
   methods: {
 
+    ...mapActions('auth', ['registerUser']),
+
     submitForm () {
-      console.log('Foi!')
+      this.$refs.user.validate()
+      this.$refs.mail.validate()
+      this.$refs.password.validate()
+      this.$refs.passwordCheck.validate()
+      if(!this.$refs.user.hasError &&
+        !this.$refs.mail.hasError &&
+        !this.$refs.password.hasError &&
+        !this.$refs.passwordCheck.hasError){
+        this.registerUser(this.signUpForm)
+      }
+      else{
+        if(this.$refs.passwordCheck.hasError){
+          this.step = 5
+        }
+        if(this.$refs.password.hasError){
+          this.step = 4
+        }
+        if(this.$refs.mail.hasError){
+          this.step = 3
+        }
+        if(this.$refs.user.hasError){
+          this.step = 2
+        }
+      }
     },
 
     isValidEmail (email) {

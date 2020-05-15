@@ -24,7 +24,7 @@
       </transition-group>
 
       <div v-if="!userFavorites.length" class="text-center absolute-center">
-        <div class="animated zoomIn slow delay-2s">
+        <div class="animated zoomIn slow">
           <q-img src="statics/icons/nofavorites.svg" style="width: 15vh;" />
           <div class="app-font-medium text-center text-grey-7 q-mt-md">
             Você não possui favoritos!

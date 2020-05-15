@@ -58,7 +58,7 @@
 
 <style>
   .my-delay{
-    animation-delay: 0.3s;
+    animation-delay: 0.1s;
   }
 </style>
 
@@ -115,6 +115,7 @@ export default {
     //   required: true,
     // }
   },
+  
 
   mounted() {
     this.dish = this.dishFinder(this.item.dishID);
@@ -168,7 +169,7 @@ export default {
     checkFavorites(){
       if (this.userFavoritesIDs.includes(this.item.dishID)){
         this.userFavorite = 'las la-heart'
-        this.heartBeat = 'animated heartBeat slower my-delay'
+        this.heartBeat = 'animated heartBeat my-delay'
       }
       else{
         this.userFavorite = 'lar la-heart'

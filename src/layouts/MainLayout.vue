@@ -33,7 +33,7 @@
 
           <q-list padding style="font-size: 1.1em">
             
-            <q-item to="/menu/today" exact class="q-py-lg" clickable v-ripple>
+            <q-item to="/today" exact class="q-py-lg" clickable v-ripple>
               <q-item-section avatar>
                 <q-icon name="las la-book-reader"/>
               </q-item-section>
@@ -89,7 +89,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item to="/" class="fixed-bottom q-py-lg text-red-8 text-bold" clickable v-ripple>
+            <q-item @click="logoutUser" class="fixed-bottom q-py-lg text-red-8 text-bold" clickable v-ripple>
               <q-item-section avatar>
                 <q-icon name="las la-sign-out-alt" />
               </q-item-section>
@@ -108,7 +108,7 @@
               <img src="https://cdn.quasar.dev/img/boy-avatar.png">
             </q-avatar>
             <div class="col q-mt-sm" style="font-size: 1.2em">
-              <div class="text-weight-bold text-primary app-font-medium">MATHEUS</div>
+              <div class="text-weight-bold text-primary app-font-medium">{{username | capitalize}}</div>
               <div name="profile-caption" class="text-caption">ADS</div>
               <div name="profile-caption" class="text-caption">Aluno</div>
             </div>
@@ -126,8 +126,19 @@
 
 <script>
 
+import { mapActions } from 'vuex'
+import { LocalStorage } from 'quasar'
+
 export default {
   name: 'MainLayout',
+
+  filters: {
+  capitalize: function (value) {
+    if (!value) return ''
+    value = value.toString()
+    return value.toUpperCase()
+  }
+},
 
   components: {
   
@@ -136,8 +147,19 @@ export default {
   data () {
     return {
       drawer: false,
-      
+      username: ''
     }
+  },
+
+  mounted(){
+    setTimeout(() => {
+      this.username = LocalStorage.getItem('loggedUserName').split(" ")[0]            
+    }, 1000)
+
+  },
+
+  methods: {
+    ...mapActions('auth', ['logoutUser']),
   }
 }
 </script>

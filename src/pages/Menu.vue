@@ -1,7 +1,13 @@
 <template>
   <q-page padding class="bg-grey-2">
 
-    <router-view/>
+    <router-view v-if="!isLoading"/>
+    
+    <div v-else>
+      <q-inner-loading showing>
+        <q-spinner-hourglass size="50px" color="primary" />
+      </q-inner-loading>
+    </div>
 
     <q-footer>
       <q-tabs
@@ -12,8 +18,8 @@
         indicator-color="#ef5350"
         class="bg-white text-red-5 shadow-up-5"
         :breakpoint="0">
-        <q-route-tab to="/menu/today" name="today" label="HOJE" icon="las la-calendar-check" />
-        <q-route-tab to="/menu/tomorrow" name="tomorrow" label="AMANHÃ" icon="las la-clock" />
+        <q-route-tab to="/today" name="today" label="HOJE" icon="las la-calendar-check" />
+        <q-route-tab to="/tomorrow" name="tomorrow" label="AMANHÃ" icon="las la-clock" />
       </q-tabs>
     </q-footer>
 
@@ -21,20 +27,34 @@
 </template>
 
 <script>
+
+import { mapActions } from "vuex";
+import { LocalStorage } from "quasar"
+
 export default {
   name: 'PageMenu',
 
   data () {
     return{
+      dialog: null,
+      isLoading: true,
       tabs: 'today',
       rating: 0
     }
+  },
+
+  async mounted (){
+    this.handleAuthLoggedStateChange()
+    if(await Promise.allSettled([this.bindDishes(), this.bindBreakfast(), this.bindLunch(), this.bindDinner(), this.bindFavorites()])){
+      this.isLoading = false
+      this.$router.push('/today').catch(err => {})
+    }
+  },
+
+  methods: {
+    ...mapActions("auth", ["handleAuthLoggedStateChange", "checkProfile"]),
+    ...mapActions("dish", ["bindDishes", "bindBreakfast", "bindLunch", "bindDinner", "bindFavorites"]),
   }
 
 }
 </script>
-
-<style>
-@import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
-
-</style>
