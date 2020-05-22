@@ -19,7 +19,7 @@
         leave-active-class="animated zoomOutRight"
       >
         <div class="q-mb-md" v-for="item in userFavorites.slice().reverse()" :key="item.dishID">
-          <menu-item :item="item"/>
+          <favorite-item :item="item"/>
         </div>
       </transition-group>
 
@@ -53,7 +53,7 @@ export default {
   },
 
   components: {
-    "menu-item": require("components/menu/MenuItem.vue").default
+    "favorite-item": require("components/menu/FavoriteItem.vue").default
   },
 
   computed: {

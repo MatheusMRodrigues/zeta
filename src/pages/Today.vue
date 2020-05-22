@@ -1,11 +1,20 @@
 <template>
 
-  <q-page class="bg-grey-2" :key="doRefresh">
+  <q-page padding class="bg-grey-2">
 
     <div style="margin-top: -10px">
 
       <q-pull-to-refresh :bg-color="refreshColor" @refresh="refresh">
 
+      <div v-if="!isOnline" class="flex flex-center q-mt-lg" style="height: 78vh;">
+        <div>
+          <div class="text-center"><q-icon name="img:statics/icons/cryingface.svg" size="5rem"/></div>
+          <div class="app-font-medium text-grey-7 q-mt-md no-item">Internet... cadê você?</div>
+        </div>
+      </div>
+
+      <div v-if="!isLoading && isOnline">
+      
       <div class="section-title flex flex-left q-py-sm q-my-md row">
         <q-icon name="img:statics/icons/breakfast.svg" size="lg" class="ribbon-icon on-left" />
         <div name="section-title" class="q-mt-sm app-font-medium text-grey-7">CAFÉ DA MANHÃ</div>
@@ -23,7 +32,7 @@
         </div>
 
       <div v-if="!breakfastToday.length" class="text-center q-mt-xl animated zoomIn">
-        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
+        <q-img src="statics/icons/sadface.svg" style="width: 10vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
@@ -46,7 +55,7 @@
       </div>
 
       <div v-if="!lunchToday.length" class="text-center q-mt-xl animated zoomIn">
-        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
+        <q-img src="statics/icons/sadface.svg" style="width: 10vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
@@ -69,10 +78,12 @@
       </div>
 
       <div v-if="!dinnerToday.length" class="text-center q-mt-xl q-mb-lg animated zoomIn">
-        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
+        <q-img src="statics/icons/sadface.svg" style="width: 10vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
+      </div>
+
       </div>
 
       </q-pull-to-refresh>
@@ -84,7 +95,6 @@
 
 <script>
   import { mapGetters, mapActions } from "vuex";
-  import { LocalStorage } from "quasar";
 
   export default {
     name: "PageToday",
@@ -95,8 +105,9 @@
 
     data() {
       return {
+        isLoading: false,
         refreshColor: null,
-        doRefresh: 1,
+        isOnline: navigator.onLine,
         profileCompleted: null,
         tabs: "today",
         rating: 0
@@ -114,17 +125,31 @@
       else{
         this.refreshColor = 'white'
       }
+
+      window.addEventListener('online', this.updateConnectionStatus);
+      window.addEventListener('offline', this.updateConnectionStatus);
     },
 
     methods: {
 
-      ...mapActions("auth", ["checkProfile"]),
-      
+      ...mapActions("dish", ["bindDishes", "bindBreakfast", "bindLunch", "bindDinner"]),
+
+      updateConnectionStatus() {
+        this.isOnline = navigator.onLine; // this method
+      },
       async refresh (done){
-        setTimeout(() => {
-          this.doRefresh += 1
+        this.isLoading = true
+        try{
+          if (!this.isOnline) {
+          }
+          await Promise.allSettled([this.bindDishes(), this.bindBreakfast(), this.bindLunch(), this.bindDinner()])
+          this.isLoading = false
           done()
-        }, 1000)
+        }catch(error){
+          // this.isLoading = false
+          done()
+        }
+      
       }
     }
     

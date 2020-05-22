@@ -1,12 +1,12 @@
 import Vue from "vue"
 import moment from "moment"
 import { firestoreAction } from 'vuexfire'
-import { db } from 'boot/firebase'
-import {uid} from "quasar"
+import { db, auth } from 'boot/firebase'
+import * as firebase from 'firebase/app'
+import {uid, LocalStorage} from "quasar"
 
 const state ={
     user: {
-        userId: '0001',
         favorites: {
             
         }
@@ -310,10 +310,27 @@ const state ={
 
 const mutations = {
 
-    addFavorite(state, payload){
+    addFavorite(state, dishID){
         // console.log(payload)
-        Vue.set(state.user.favorites, payload.id, {dishID: payload.dishID})
+        Vue.set(state.user.favorites, uid(), {dishID: dishID})
     },
+
+    updateFavorites(state){
+        // console.log(payload)
+        db.collection('users').where("userID", "==", LocalStorage.getItem('loggedUserID')).get()
+        .then(querySnapshot => {
+            querySnapshot.forEach(doc => {
+                let favorites = doc.data().favorites
+                favorites.forEach(item => {
+                    Vue.set(state.user.favorites, uid(), item)
+                })
+            })
+        })
+        .catch(error => {
+            return error
+        })
+    },
+
     addRating(state, {menuSchedule, menuSchedulId, itemId}, userRatingId, rating, userID){
         // console.log(payload)
         Vue.set(state.menu[menuSchedule][menuScheduleId].items[itemId].userRating, userRatingId, 
@@ -362,31 +379,73 @@ const actions = {
         return bindFirestoreRef('dishes', db.collection('dishes'))
     }),
 
-    bindFavorites: firestoreAction(({ bindFirestoreRef }) => {
-        // return the promise returned by `bindFirestoreRef`
-        return bindFirestoreRef('user.favorites', db.collection('favorites'))
-    }),
-
     // ==================================================
 
     checkFavorite({ commit, state }, dishID){
+        console.log('ta indo')
         let tempFavorites = objToArrayWithKey(state.user.favorites)
 
         let found = tempFavorites.find(e => e[1].dishID == dishID)
 
         if(!found)  {
-            let favoriteID = uid()
-            let payload = {
-                id: favoriteID,
-                dishID: dishID
+            console.log('aqui tbm' + dishID)
+            console.log('aqui tbm2' + dishID)
+            commit('addFavorite', dishID)
+            db.collection('users').where("userID", "==", LocalStorage.getItem('loggedUserID')).get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    console.log('aqui tbm3' + doc.id)
+                    db.collection('users').doc(doc.id).update({
+                        favorites: firebase.firestore.FieldValue.arrayUnion({dishID: dishID})
+                    })
+                    .then(response => {
+                        return response
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        return error
+                    })
+                })
+            })
+            .catch(error => {
+                return error
+            })
             }
-            commit('addFavorite', payload)
-        }
         else{
             // console.log(found[0])
             commit('removeFavorite', found[0])
+            db.collection('users').where("userID", "==", LocalStorage.getItem('loggedUserID')).get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    console.log('aqui tbm3' + doc.id)
+                    db.collection('users').doc(doc.id).update({
+                        favorites: firebase.firestore.FieldValue.arrayRemove({dishID: dishID})
+                    })
+                    .then(response => {
+                        return response
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        return error
+                    })
+                })
+            })
+            .catch(error => {
+                return error
+            })
         }
     },
+
+    updateFavorites ({ commit, state }) {
+        let executed = false
+        if(!executed){
+            executed = true
+            commit('updateFavorites')
+        }
+        else{
+            console.log("Tá sussa")
+        }
+    }
 }
 
 // ================ DATE UTILS ====================

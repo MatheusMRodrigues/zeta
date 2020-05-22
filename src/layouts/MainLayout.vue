@@ -62,12 +62,12 @@
               </q-item-section>
             </q-item>
 
-            <q-item to="" exact class="q-py-lg" clickable v-ripple>
+            <q-item to="/profile" exact class="q-py-lg" clickable v-ripple>
               <q-item-section avatar>
                 <q-icon name="las la-user" />
               </q-item-section>
               <q-item-section>
-                Meus dados
+                Perfil
               </q-item-section>
             </q-item>
 
@@ -104,13 +104,13 @@
 
         <div class="absolute-top" style="height: 120px; margin-left: -5px;">
           <div class="absolute-bottom bg-transparent row">
-            <q-avatar size="80px" class="q-mb-md q-pa-none col">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+            <q-avatar size="80px" font-size="52px" color="red-5" text-color="white" class="q-ml-lg q-mb-md q-mr-md">
+              <q-img :src="userData.avatar" :ratio="1"/>
             </q-avatar>
             <div class="col q-mt-sm" style="font-size: 1.2em">
-              <div class="text-weight-bold text-primary app-font-medium">{{username | capitalize}}</div>
-              <div name="profile-caption" class="text-caption">ADS</div>
-              <div name="profile-caption" class="text-caption">Aluno</div>
+              <div class="text-weight-bold text-primary app-font-medium">{{userNameFormated}}</div>
+              <div v-if="userData.course != 'Selecione seu curso'" name="profile-caption" class="text-caption">{{userData.course | course}}</div>
+              <div name="profile-caption" class="text-caption">{{userData.role}}</div>
             </div>
           </div>
         </div>
@@ -126,8 +126,9 @@
 
 <script>
 
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { LocalStorage } from 'quasar'
+import { auth, db } from 'boot/firebase'
 
 export default {
   name: 'MainLayout',
@@ -137,29 +138,40 @@ export default {
     if (!value) return ''
     value = value.toString()
     return value.toUpperCase()
-  }
-},
-
-  components: {
-  
   },
+  course: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      if(value == 'Análise e Desenvolvimento de Sistemas'){
+        return 'ADS'
+      }
+      else{
+        return value
+      }
+    }
+},
 
   data () {
     return {
       drawer: false,
-      username: ''
+      user: {}
     }
   },
 
-  mounted(){
-    setTimeout(() => {
-      this.username = LocalStorage.getItem('loggedUserName').split(" ")[0]            
-    }, 1000)
+  computed: {
+    userNameFormated() {
+      return(this.userData.userName ||"" ).split(" ")[0] 
+    },  
+    ...mapGetters('auth', ['userData'])   
+  },
 
+  mounted(){
+    this.bindUserData()
   },
 
   methods: {
-    ...mapActions('auth', ['logoutUser']),
+    ...mapActions('auth', ['logoutUser', 'bindUserData']),
+
   }
 }
 </script>

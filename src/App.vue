@@ -16,11 +16,13 @@ export default {
   name: 'App',
 
   methods: {
-    ...mapActions('auth', ['handleAuthLoggedStateChange'])
+    ...mapActions('auth', ['handleAuthLoggedStateChange']),
+    ...mapActions('dish', ['updateFavorites'])
   },
 
   mounted () {
-    this.handleAuthLoggedStateChange()
+   this.handleAuthLoggedStateChange()
+   this.updateFavorites()
   }
 }
 </script>

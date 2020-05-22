@@ -1,11 +1,11 @@
 <template>
-  <q-page padding class="bg-grey-2">
+  <q-page class="bg-grey-2">
 
     <router-view v-if="!isLoading"/>
     
     <div v-else>
       <q-inner-loading showing>
-        <q-spinner-hourglass size="50px" color="primary" />
+        <q-spinner size="3em" color="primary" />
       </q-inner-loading>
     </div>
 
@@ -43,17 +43,21 @@ export default {
     }
   },
 
-  async mounted (){
-    this.handleAuthLoggedStateChange()
-    if(await Promise.allSettled([this.bindDishes(), this.bindBreakfast(), this.bindLunch(), this.bindDinner(), this.bindFavorites()])){
-      this.isLoading = false
-      this.$router.push('/today').catch(err => {})
-    }
+  mounted (){
+   this.loadMenu()
   },
 
   methods: {
-    ...mapActions("auth", ["handleAuthLoggedStateChange", "checkProfile"]),
-    ...mapActions("dish", ["bindDishes", "bindBreakfast", "bindLunch", "bindDinner", "bindFavorites"]),
+    ...mapActions("auth", ["handleAuthLoggedStateChange"]),
+    ...mapActions("dish", ["bindDishes", "bindBreakfast", "bindLunch", "bindDinner"]),
+
+    async loadMenu () {
+      
+      if(await Promise.allSettled([this.bindDishes(), this.bindBreakfast(), this.bindLunch(), this.bindDinner()])){
+        this.isLoading = false
+        this.$router.push('/today').catch(err => {})
+      }
+    }
   }
 
 }

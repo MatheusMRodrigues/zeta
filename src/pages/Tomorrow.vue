@@ -1,10 +1,19 @@
 <template>
 
-  <q-page class="bg-grey-2" :key="doRefresh">
+  <q-page padding class="bg-grey-2">
 
     <div style="margin-top: -10px">
 
       <q-pull-to-refresh :bg-color="refreshColor" @refresh="refresh">
+
+        <div v-if="!isOnline" class="flex flex-center q-mt-lg" style="height: 78vh;">
+          <div>
+            <div class="text-center"><q-icon name="img:statics/icons/cryingface.svg" size="5rem"/></div>
+            <div class="app-font-medium text-grey-7 q-mt-md no-item">Internet... cadê você?</div>
+          </div>
+        </div>
+
+      <div v-if="!isLoading && isOnline">
 
       <div class="section-title flex flex-left q-py-sm q-my-md row">
         <q-icon name="img:statics/icons/breakfast.svg" size="lg" class="ribbon-icon on-left" />
@@ -24,7 +33,7 @@
       </div>
 
       <div v-if="!breakfastTomorrow.length" class="text-center q-mt-xl animated zoomIn">
-        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
+        <q-img src="statics/icons/sadface.svg" style="width: 10vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
@@ -48,7 +57,7 @@
       </div>
 
       <div v-if="!lunchTomorrow.length" class="text-center q-mt-xl animated zoomIn">
-        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
+        <q-img src="statics/icons/sadface.svg" style="width: 10vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
@@ -66,10 +75,12 @@
       </div>
 
       <div v-if="!dinnerTomorrow.length" class="text-center q-mt-xl q-mb-lg animated zoomIn">
-        <q-img src="statics/icons/sadface.svg" style="width: 15vh;" />
+        <q-img src="statics/icons/sadface.svg" style="width: 10vh;" />
         <div class="app-font-medium text-grey-7 q-mt-md no-item">
           Nada aqui!
         </div>
+      </div>
+
       </div>
 
       </q-pull-to-refresh>
@@ -79,17 +90,16 @@
 </template>
 
 <script>
-  import {
-    mapGetters
-  } from "vuex";
+  import { mapGetters, mapActions } from "vuex";
 
   export default {
     name: "PageTomorrow",
 
     data() {
       return {
+        isLoading: false,
+        isOnline: navigator.onLine,
         refreshColor: null,
-        doRefresh: 1,
         tabs: "today",
         rating: 0
       };
@@ -110,15 +120,28 @@
       else{
         this.refreshColor = 'white'
       }
+
+      window.addEventListener('online', this.updateConnectionStatus);
+      window.addEventListener('offline', this.updateConnectionStatus);
     },
 
     methods: {
       
+      ...mapActions("dish", ["bindDishes", "bindBreakfast", "bindLunch", "bindDinner"]),
+            
       async refresh (done){
-        setTimeout(() => {
-          this.doRefresh += 1
+        this.isLoading = true
+        try{
+          if (!this.isOnline) {
+          }
+          await Promise.allSettled([this.bindDishes(), this.bindBreakfast(), this.bindLunch(), this.bindDinner()])
+          this.isLoading = false
           done()
-        }, 1000)
+        }catch(error){
+          // this.isLoading = false
+          done()
+        }
+      
       }
     }
   };
