@@ -27,7 +27,7 @@
           leave-active-class="animated hinge"
         >
           <div class="q-mb-md" v-for="(item, itemKey) in breakfast.items" :key="item.itemID">
-            <menu-item :item="item" :itemKey="itemKey" />
+            <menu-item :item="item" :itemKey="itemKey" :type="'breakfast'" :docID="breakfast.breakfastID" :items="breakfast.items" />
           </div>
         </transition-group>
       </div>
@@ -51,7 +51,7 @@
           leave-active-class="animated hinge"
         >
           <div class="q-mb-md" v-for="(item, itemKey) in lunch.items" :key="item.itemID">
-            <menu-item :item="item" :itemKey="itemKey" />
+            <menu-item :item="item" :itemKey="itemKey" :type="'lunch'" :docID="lunch.lunchID" :items="lunch.items"/>
           </div>
         </transition-group>
       </div>
@@ -70,7 +70,7 @@
 
       <div v-for="dinner in dinnerTomorrow" :key="dinner.breakfastID">
         <div class="q-mb-md" v-for="(item, itemKey) in dinner.items" :key="item.itemID">
-          <menu-item :item="item" :itemKey="itemKey" />
+          <menu-item :item="item" :itemKey="itemKey" :type="'dinner'" :docID="dinner.dinnerID" :items="dinner.items"/>
         </div>
       </div>
 

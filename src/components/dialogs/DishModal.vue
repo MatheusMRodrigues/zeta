@@ -45,16 +45,19 @@
     <q-separator inset spaced />
 
     <q-card-section>
-      <div name="dishInfoDiv" class="app-font-medium text-grey-7">Avaliação:</div>
-      <div name="dishInfoDiv" class="text-caption app-font text-grey-7 q-my-sm">Deixe sua avaliação:</div>
+      <div name="dishInfoDiv" class="app-font-medium text-grey-7">Avaliação média dos usuários:</div>
       <q-rating
         style="margin-left: -5px;"
-        @click.stop
+        @click.prevent
         v-model="rating"
+        readonly
         :max="5"
         size="2.3em"
         color="red-5"
         :icon="icons" />
+        <div class="text-caption text-grey-7">
+          Total de avaliações: {{totalRating}}
+        </div>
     </q-card-section>
   </q-card>
 
@@ -64,20 +67,24 @@
   export default {
     name: 'PageIndex',
 
-    props: ["dish"],
+    props: ["dish", "totalRating", "ratingAvg"],
 
     data() {
-    return {
-      rating: 0,
-      icons: [
-        "sentiment_very_dissatisfied",
-        "sentiment_dissatisfied",
-        "sentiment_neutral",
-        "sentiment_satisfied",
-        "sentiment_very_satisfied"
-      ]
-    };
-  },
+      return {
+        rating: 0,
+        icons: [
+          "sentiment_very_dissatisfied",
+          "sentiment_dissatisfied",
+          "sentiment_neutral",
+          "sentiment_satisfied",
+          "sentiment_very_satisfied"
+        ]
+      };
+    },
+
+    mounted () {
+      this.rating = this.ratingAvg
+    }
   }
 
 </script>

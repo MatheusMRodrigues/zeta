@@ -26,7 +26,7 @@
             enter-active-class="animated bounceIn"
             leave-active-class="animated hinge">
             <div class="q-mb-md" v-for="(item, itemKey) in breakfast.items" :key="item.itemID">
-              <menu-item :item="item" :itemKey="itemKey" />
+              <menu-item :item="item" :itemKey="itemKey" :type="'breakfast'" :docID="breakfast.breakfastID" :items="breakfast.items" :key="update" :function="updateComponent"/>
             </div>
           </transition-group>
         </div>
@@ -49,7 +49,7 @@
           enter-active-class="animated bounceIn"
           leave-active-class="animated hinge">
           <div class="q-mb-md" v-for="(item, itemKey) in lunch.items" :key="item.itemID">
-            <menu-item :item="item" :itemKey="itemKey" />
+            <menu-item :item="item" :itemKey="itemKey" :type="'lunch'" :docID="lunch.lunchID" :items="lunch.items"/>
           </div>
         </transition-group>
       </div>
@@ -72,7 +72,7 @@
           enter-active-class="animated bounceIn"
           leave-active-class="animated hinge">
           <div class="q-mb-md" v-for="(item, itemKey) in dinner.items" :key="item.itemID">
-            <menu-item :item="item" :itemKey="itemKey" />
+            <menu-item :item="item" :itemKey="itemKey" :type="'dinner'" :docID="dinner.dinnerID" :items="dinner.items"/>
           </div>
         </transition-group>
       </div>
@@ -95,6 +95,7 @@
 
 <script>
   import { mapGetters, mapActions } from "vuex";
+  import { db } from 'boot/firebase'
 
   export default {
     name: "PageToday",
@@ -107,8 +108,8 @@
       return {
         isLoading: false,
         refreshColor: null,
+        update: 0,
         isOnline: navigator.onLine,
-        profileCompleted: null,
         tabs: "today",
         rating: 0
       };
@@ -133,6 +134,10 @@
     methods: {
 
       ...mapActions("dish", ["bindDishes", "bindBreakfast", "bindLunch", "bindDinner"]),
+
+      updateComponent () {
+        this.update += 1
+      },
 
       updateConnectionStatus() {
         this.isOnline = navigator.onLine; // this method

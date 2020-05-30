@@ -28,8 +28,6 @@
         class="app-font"
       >
         <q-scroll-area style="height: calc(100% - 120px); margin-top: 120px;">
-          
-          <q-separator color="red-5" inset />
 
           <q-list padding style="font-size: 1.1em">
             
@@ -89,7 +87,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item @click="logoutUser" class="fixed-bottom q-py-lg text-red-8 text-bold" clickable v-ripple>
+            <q-item @click="logoutUser" class="vertical-bottom q-py-lg text-red-8 text-bold" clickable v-ripple>
               <q-item-section avatar>
                 <q-icon name="las la-sign-out-alt" />
               </q-item-section>

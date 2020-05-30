@@ -278,7 +278,6 @@ const actions = {
         .then(querySnapshot => {
             querySnapshot.forEach(doc => {
               let id = doc.id
-              console.log(doc.id)
               return bindFirestoreRef('userData', db.collection('users').doc(id))
             })
         })

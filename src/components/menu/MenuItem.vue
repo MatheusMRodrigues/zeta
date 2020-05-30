@@ -15,18 +15,18 @@
       <q-card-section class="card-section q-py-none bg-red-5">
         <div class="row no-wrap items-center rating-section">
           <div class="col">
+            <div class="app-font text-caption text-white">
+              Avalie o prato:
+            </div>
             <q-rating
               style="margin-left: -5px;"
-              @click.stop
-              v-model="rating"
+              @click.stop = "rateDish"
+              v-model="ratingUser"
               :max="5"
               size="2.3em"
               color="white"
               :icon="icons"
             />
-            <div class="text-caption text-white rating-counter">
-              Total de avaliações: {{item.totalRating}}
-            </div>
           </div>
           <div class="col-auto row no-ripple">
             <q-btn
@@ -51,7 +51,7 @@
       transition-show="scale"
       transition-hide="scale"
     >
-      <dish-info :dish = this.dish />
+      <dish-info :dish = this.dish :totalRating = this.totalRating :ratingAvg = this.ratingAvg />
     </q-dialog>
   </div>
 </template>
@@ -63,8 +63,10 @@
 </style>
 
 <script>
-import { mapActions } from "vuex";
-import { mapGetters } from "vuex";
+import { mapActions } from "vuex"
+import { mapGetters } from "vuex"
+import { LocalStorage } from "quasar"
+import { db } from "boot/firebase"
 
 export default {
   name: "MenuItem",
@@ -77,7 +79,10 @@ export default {
       dish: {},
       userFavorite: null,
       heartBeat: null,
-      rating: 0,
+      ratingUser: 0,
+      ratingAvg: null,
+      totalRating: null,
+      rating: {},
       icons: [
         "sentiment_very_dissatisfied",
         "sentiment_dissatisfied",
@@ -93,79 +98,80 @@ export default {
       default: null,
       required: true,
     },
-    // typeSchedule: {
-    //   type: String,
-    //   required: true,
-    //   validator: function(value) {
-    //     return ["breakfast", "lunch", "dinner"].includes(value.toLowerCase());
-    //   }
-    // },
-    // scheduleID: {
-    //   type: [Number, String],
-    //   required: true,
-    // },
-    // // typeID : {
-    // //   type: Object,
-    // //   default: null,
-    // //   required: true,
-    // // },
-    // itemKey : {
-    //   type: String,
-    //   default: null,
-    //   required: true,
-    // }
+    docID : {
+      type: String,
+      default: null,
+      required: true,
+    },
+    items : {
+      default: null,
+      required: true,
+    },
+    type : {
+      type: String,
+      default: null,
+      required: true,
+    },
+    function : {
+      type: Function,
+      default: null,
+      required: false,
+    }
   },
   
 
   mounted() {
-    this.dish = this.dishFinder(this.item.dishID);
-    this.checkFavorites();
-    // // Agora tu da um jeito de pegar o useId  
-    // this.rating = this.userRatingSchedule(this.scheduleId, this.itemKey, '0001');
+    this.dish = this.dishFinder(this.item.dishID)
+    this.checkFavorites()
+    for (let rating in this.item.userRating) {
+      if (this.item.userRating[rating].userID === LocalStorage.getItem('loggedUserID')) this.ratingUser = this.item.userRating[rating].rating
+      this.ratingAvg += this.item.userRating[rating].rating
+    }
+    this.totalRating = Object.keys(this.item.userRating).length;
+    this.ratingAvg = this.ratingAvg / Object.keys(this.item.userRating).length;
   },
 
   computed: {
-    // isBreakfast(){
-    //   return this.typeSchedule === "breakfast";
-    // },
-    // isLunch(){
-    //   return this.typeSchedule === "lunch";
-    // },
-    // isDinner(){
-    //   return this.typeSchedule === "dinner";
-    // },
+
     ...mapGetters("dish", [
         "dishes", "dishFinder", 
-        "userFavoritesIDs",
-        "userRating",
-        "userRatingBreakfast", 
-        "userRatingLunch", 
-        "userRatingDinner"
+        "userFavoritesIDs"
       ]
     )
   },
 
   watch: {
-    rating (value) {
-      this.rating = value;
-      this.item.rating = value;
-    }
+
   },
 
   methods: {
     ...mapActions("dish", ["checkFavorite", "updateFavorites"]),
 
-    userRatingSchedule(menuScheduleId, itemId, userRatingId){
-      if(this.isBreakfast) {
-        return this.userRatingBreakfast(menuScheduleId, itemId, userRatingId);
+    rateDish () {
+
+      this.rating = {userID: LocalStorage.getItem('loggedUserID'), rating: this.ratingUser}
+
+      const itemsOriginal = JSON.stringify(this.item)
+
+      for (var rating in this.item.userRating) {
+        if (rating === this.rating.userID) this.item.userRating[rating] = this.rating
       }
-      if(this.isLunch) {
-        return this.userRatingLunch(menuScheduleId, itemId, userRatingId);
-      }
-      if(this.isDinner) {
-        return this.userRatingDinner(menuScheduleId, itemId, userRatingId);
-      }
+      if (itemsOriginal === JSON.stringify(this.item)) this.item.userRating[this.rating.userID] = this.rating
+      
+      db.collection('menu').doc(this.type+'s').collection(this.type).doc(this.docID).update({
+        items: this.items
+      })
+      .then(response => {
+        this.function()
+        console.log('foi')
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+
     },
+
     checkFavorites(){
       if (this.userFavoritesIDs.includes(this.item.dishID)){
         this.userFavorite = 'las la-heart'
