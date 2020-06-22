@@ -82,6 +82,10 @@ export default {
       ratingUser: 0,
       ratingAvg: null,
       totalRating: null,
+      itemsHolder: {
+        ratingsSum: 0,
+        count: 0
+      },
       rating: {},
       icons: [
         "sentiment_very_dissatisfied",
@@ -145,9 +149,12 @@ export default {
   },
 
   methods: {
-    ...mapActions("dish", ["checkFavorite", "updateFavorites"]),
+    ...mapActions("dish", ["checkFavorite"]),
 
     rateDish () {
+
+      this.itemsHolder.ratingsSum = 0
+      this.itemsHolder.count = 0
 
       this.rating = {userID: LocalStorage.getItem('loggedUserID'), rating: this.ratingUser}
 
@@ -162,11 +169,94 @@ export default {
         items: this.items
       })
       .then(response => {
-        this.function()
-        console.log('foi')
+        db.collection('menu').doc('lunchs').collection('lunch').get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            let docData = doc.data().items
+            let items
+            Object.values(docData).forEach(item =>{
+              if (item.dishID == this.dish.dishID) {
+                Object.values(item.userRating).forEach(register =>{
+                  console.log(register.rating)
+                  this.itemsHolder.ratingsSum += register.rating
+                  this.itemsHolder.count += 1
+                })
+              }
+            })
+            
+          })
+          console.log(this.itemsHolder)
+
+        })
+      .catch(error => {
+        console.log(error)
+      })
+      db.collection('menu').doc('dinners').collection('dinner').get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            let docData = doc.data().items
+            let items
+            Object.values(docData).forEach(item =>{
+              if (item.dishID == this.dish.dishID) {
+                Object.values(item.userRating).forEach(register =>{
+                  console.log(register.rating)
+                  this.itemsHolder.ratingsSum += register.rating
+                  this.itemsHolder.count += 1
+                })
+              }
+            })
+            
+          })
+          console.log(this.itemsHolder)
+          
+        })
+      .catch(error => {
+        console.log(error)
+      })
+      db.collection('menu').doc('breakfasts').collection('breakfast').get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            let docData = doc.data().items
+            let items
+            Object.values(docData).forEach(item =>{
+              if (item.dishID == this.dish.dishID) {
+                Object.values(item.userRating).forEach(register =>{
+                  console.log(register.rating)
+                  this.itemsHolder.ratingsSum += register.rating
+                  this.itemsHolder.count += 1
+                })
+              }
+            })
+            
+          })
+          console.log(this.itemsHolder)
+          
+        })
+      .finally(final => {
+        let ratingsAvg = this.itemsHolder.ratingsSum/this.itemsHolder.count
+        let totalRatings = this.itemsHolder.count
+
+        db.collection('dishes').where("dishID", "==", this.dish.dishID).get()
+        .then(querySnapshot => {
+            querySnapshot.forEach(doc => {
+                db.collection('dishes').doc(doc.id).update({
+                    ratingAvg: ratingsAvg,
+                    totalRating: totalRatings
+                })
+                .then(response => {
+                    return response
+                })
+                .catch(error => {
+                    console.log(error)
+                    return error
+                })
+            })
+        })
       })
       .catch(error => {
         console.log(error)
+      })
+    
       })
 
 

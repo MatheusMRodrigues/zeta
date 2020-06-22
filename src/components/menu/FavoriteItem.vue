@@ -124,7 +124,7 @@ export default {
   },
 
   methods: {
-    ...mapActions("dish", ["checkFavorite", "updateFavorites"]),
+    ...mapActions("dish", ["checkFavorite"]),
 
     checkFavorites(){
       if (this.userFavoritesIDs.includes(this.item.dishID)){

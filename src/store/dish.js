@@ -387,9 +387,11 @@ const actions = {
 
         let found = tempFavorites.find(e => e[1].dishID == dishID)
 
+        const increment = firebase.firestore.FieldValue.increment(1);
+
+        const decrement = firebase.firestore.FieldValue.increment(-1);
+
         if(!found)  {
-            console.log('aqui tbm' + dishID)
-            console.log('aqui tbm2' + dishID)
             commit('addFavorite', dishID)
             db.collection('users').where("userID", "==", LocalStorage.getItem('loggedUserID')).get()
             .then(querySnapshot => {
@@ -399,7 +401,21 @@ const actions = {
                         favorites: firebase.firestore.FieldValue.arrayUnion({dishID: dishID})
                     })
                     .then(response => {
-                        return response
+                        db.collection('dishes').where("dishID", "==", dishID).get()
+                        .then(querySnapshot => {
+                            querySnapshot.forEach(doc => {
+                                db.collection('dishes').doc(doc.id).update({
+                                    favoriteTotal: increment
+                                })
+                                .then(response => {
+                                    return response
+                                })
+                                .catch(error => {
+                                    console.log(error)
+                                    return error
+                                })
+                            })
+                        })
                     })
                     .catch(error => {
                         console.log(error)
@@ -422,7 +438,21 @@ const actions = {
                         favorites: firebase.firestore.FieldValue.arrayRemove({dishID: dishID})
                     })
                     .then(response => {
-                        return response
+                        db.collection('dishes').where("dishID", "==", dishID).get()
+                        .then(querySnapshot => {
+                            querySnapshot.forEach(doc => {
+                                db.collection('dishes').doc(doc.id).update({
+                                    favoriteTotal: decrement
+                                })
+                                .then(response => {
+                                    return response
+                                })
+                                .catch(error => {
+                                    console.log(error)
+                                    return error
+                                })
+                            })
+                        })
                     })
                     .catch(error => {
                         console.log(error)

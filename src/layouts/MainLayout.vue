@@ -23,8 +23,9 @@
     <q-drawer
         v-model="drawer"
         show-if-above
+        overlay
         :width="250"
-        :breakpoint="400"
+        :breakpoint="600"
         class="app-font"
       >
         <q-scroll-area style="height: calc(100% - 120px); margin-top: 120px;">
