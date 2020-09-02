@@ -6,6 +6,7 @@ import * as firebase from 'firebase/app'
 import {uid, LocalStorage} from "quasar"
 
 const state ={
+
     user: {
         favorites: {
             
